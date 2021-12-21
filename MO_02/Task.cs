@@ -153,7 +153,7 @@ namespace MO_02
                 return false;
             if (basis != null)
                 if ((basis.Length != 0) && (function != null))
-                    if (basis.Length != function.Length)
+                    if ((basis.Length != function.Length)&&(basis.Length != function.Length + condition.Length))
                         return false;
             int size_con = function.Length + 1;
             if (condition != null)

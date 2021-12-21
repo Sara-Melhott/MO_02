@@ -19,7 +19,7 @@ namespace MO_02
         bool ordinaryFraction;
         bool findBasis;
         bool MIB;
-        int NubmerTableMIB = 0;
+        int NumberTableMIB = 0;
         DataTable Table = new DataTable();
         SimplexTable simplex;
         ArtificialBasisMethod artificialBasis;
@@ -27,6 +27,7 @@ namespace MO_02
         List<int[]> listEl;
         List<int[]> AllListEl = new List<int[]>();
         List<int[]> BestListEl = new List<int[]>();
+        Stack<ArrayList> stack = new Stack<ArrayList>();
         public Form4(Task task, bool step, bool ordinaryFraction)
         {
             this.task = task;
@@ -66,12 +67,12 @@ namespace MO_02
 
             if (!findBasis)
             {
-                simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
+                stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
                 ArtificialBasis();
             }
             else
             {
-                simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
+                stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
                 Main();
             }
         }
@@ -83,12 +84,14 @@ namespace MO_02
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
-            simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
             listEl = simplex.FindReferenceElement();
             int[] el = ChooseEl(listEl);
             if (el == null) return;
             //Получение ответа от пользователя (выбор опорного элемента)
+            stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
             simplex.NewSimplexTable(el);
+            if (MIB && !findBasis)
+                NumberTableMIB++;
             ++number_table;
             button2.Enabled = true;
             if (findBasis)
@@ -103,19 +106,23 @@ namespace MO_02
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            ArrayList list = simplex.stack.Pop();
+            ArrayList list = stack.Pop();
             simplex.table = (OrdinaryFraction[][])list[0];
             simplex.task = (Task)list[1];
             listEl = simplex.FindReferenceElement();
             --number_table;
             if (number_table < 0)
             {
-                number_table = NubmerTableMIB;
-            }
-            if (number_table == NubmerTableMIB - 1)
-            {
+                list = stack.Pop();
+                simplex.table = (OrdinaryFraction[][])list[0];
+                simplex.task = (Task)list[1];
+                listEl = simplex.FindReferenceElement();
+                number_table = NumberTableMIB - 1;
                 findBasis = false;
+                PrintDeleteTable();
             }
+            if (MIB && !findBasis)
+                NumberTableMIB--;
             button3.Enabled = true;
             textBox2.Text = "";
             //Удаление последней таблицы в dataGridView1
@@ -173,13 +180,15 @@ namespace MO_02
                     textBox2.Text = "";
                     listEl = simplex.FindReferenceElement();
 
-                    //Печатаем таблицу number_table
-                    PrintAddTable();
                     if (simplex.task.answer != null)
                     {
-                        textBox2.Text = "Ответ: " + task.answer;
+                        textBox2.Text = "Ответ: " + simplex.Answer(ordinaryFraction);
+                        //Печатаем таблицу number_table
+                        PrintAddTable();
                         return;
                     }
+                    //Печатаем таблицу number_table
+                    PrintAddTable();
                     //simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
                     int[] best = simplex.MaxReferenceElement(listEl);
                     simplex.NewSimplexTable(best);
@@ -208,7 +217,7 @@ namespace MO_02
         /// C искусственным базисом
         /// </summary>
         private void ArtificialBasis()
-        {
+         {
             if (step_by_step)
             {
                 if (!simplex.FindBasis())
@@ -220,22 +229,23 @@ namespace MO_02
                         textBox2.Text = "Ответ: " + simplex.Answer(ordinaryFraction);
                         button3.Enabled = false;
                     }
-                    NubmerTableMIB++;
+                    //NumberTableMIB++;
                     PrintAddTable();
                 }
                 else
                 {
+                    findBasis = true;
                     PrintAddTable();
-                    simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
+                    stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
                     OrdinaryFraction[][] table = simplex.tableCopy();
+                    artificialBasis.task = simplex.task;
                     artificialBasis.NewTable(table);
                     artificialBasis.NewBasis();
                     textBox1.Text = textBox1.Text + simplex.task.printBasis(ordinaryFraction);
-                    findBasis = true;
                     number_table = 0;
                     simplex = new SimplexTable(artificialBasis.task);
 
-                    simplex.stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
+                    //stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
                     Main();
                 }
             }
@@ -302,7 +312,7 @@ namespace MO_02
             {
                 int x = dataGridView1.CurrentCell.ColumnIndex;
                 int y = dataGridView1.CurrentCell.RowIndex;
-                if (number_table == 0)
+                if ((number_table == 0)&&(NumberTableMIB==0))
                 {
                     for (int i = 0; i < listEl.Count; i++)
                         if ((x - 1 == listEl[i][0]) && (y - 1 == listEl[i][1]))
@@ -417,20 +427,16 @@ namespace MO_02
             {
                 //Выделение опорный элементов
                 int[] best = simplex.MaxReferenceElement(listEl);
-                if (number_table == 0)
+                if ((number_table == 0)&&(NumberTableMIB == 0))
                 {
                     for (int i = 0; i < listEl.Count; i++)
-                    {
                         dataGridView1.Rows[listEl[i][1] + 1].Cells[listEl[i][0] + 1].Style.BackColor = Color.LightGreen;
-                    }
                     dataGridView1.Rows[best[1] + 1].Cells[best[0] + 1].Style.BackColor = Color.GreenYellow;
                 }
                 else
                 {
                     for (int i = 0; i < listEl.Count; i++)
-                    {
                         dataGridView1.Rows[listEl[i][1] + 1 + old_y].Cells[listEl[i][0] + 1].Style.BackColor = Color.LightGreen;
-                    }
                     dataGridView1.Rows[best[1] + 1 + old_y].Cells[best[0] + 1].Style.BackColor = Color.GreenYellow;
                 }
             }
