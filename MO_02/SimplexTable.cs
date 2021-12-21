@@ -145,8 +145,8 @@ namespace MO_02
             int i = 0;
             while (!FindBasis())
             {
-                //Console.WriteLine("Сипмплекс-таблица ~х(" + i + ")");
-                //print();
+                Console.WriteLine("Сипмплекс-таблица ~х(" + i + ")");
+                print();
                 List<int[]> list = FindReferenceElement();
                 if (task.answer != null)
                     break;
@@ -154,8 +154,8 @@ namespace MO_02
                 NewSimplexTable(list[0]);
                 i++;
             }
-            //Console.WriteLine("Сипмплекс-таблица ~х(" + i + ")");
-            //print();
+            Console.WriteLine("Сипмплекс-таблица ~х(" + i + ")");
+            print();
             if (task.answer == null)
                 Console.WriteLine("Базис найден");
             return tableCopy();
@@ -287,7 +287,24 @@ namespace MO_02
 
             }
             if (list.Count == 0)
-                task.answer = "Система условий задачи несовместна";
+            {
+                if (FFF())
+                {
+                    for (int i = 0; i < table[0].Length - 1; i++)
+                    {
+                        if (task.basis[i+basis_var][0] <= task.function.Length)
+                        {
+                            for (int j = 0; j < table.Length - 1; j++)
+                            {
+                                if (table[j][i].NegativeFraction())
+                                    list.Add(new int[] {i, j});
+                            }
+                        }
+                    }
+                }
+                else
+                    task.answer = "Система условий задачи несовместна";
+            }
             return list;
         }
         /// <summary>
@@ -334,8 +351,20 @@ namespace MO_02
                     return false;
                 }
             }
-
+            //наличие искусственных переменных в базисе
+            if (FFF())
+                return false;
             return true;
+        }
+        /// <summary>
+        /// Проверяет наличие искусственных переменных в базисе
+        /// </summary>
+        public bool FFF()
+        {
+            for (int i = 0; i < basis_var; i++)
+                if (task.basis[i][0] > task.function.Length)
+                    return true;
+            return false;
         }
         /// <summary>
         /// Проверяет найдено ли решение (все элементы последней строки >= 0)
@@ -398,21 +427,21 @@ namespace MO_02
         /// <summary>
         /// Выводит на консоль текущую симплекс-таблицу
         /// </summary>
-        /*public void print()
+        public void print()
         {
             for (int i = 0; i < table.Length; i++)
             {
                 for (int j = 0; j < table[i].Length; j++)
                 {
                     if (j == table[i].Length - 2)
-                        Console.Write(table[i][j].Print() + " * x" + task.basis[basis_var + j][0] + " = ");
+                        Console.Write(table[i][j].Print(true) + " * x" + task.basis[basis_var + j][0] + " = ");
                     else if (j == table[i].Length - 1)
-                        Console.Write(table[i][j].Print());
+                        Console.Write(table[i][j].Print(true));
                     else
-                        Console.Write(table[i][j].Print() + " * x" + task.basis[basis_var + j][0] + " + ");
+                        Console.Write(table[i][j].Print(true) + " * x" + task.basis[basis_var + j][0] + " + ");
                 }
                 Console.Write("\n");
             }
-        }*/
+        }
     }
 }

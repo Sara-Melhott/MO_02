@@ -186,6 +186,46 @@ namespace MO_02
             return true;
         }
         /// <summary>
+        /// Печатает базис задачи
+        /// </summary>
+        /// <param name="ordinaryFraction"></param>
+        /// <returns></returns>
+        public string printBasis (bool ordinaryFraction)
+        {
+            int[][] new_basis = new int[basis.Length][];
+            for (int i = 0; i < basis.Length; i++)
+            {
+                int[] row = new int[2];
+                for (int j = 0; j < 2; j++)
+                {
+                    row[j] = basis[i][j];
+                }
+                new_basis[i] = row;
+            }
+            for (int i = 0; i < new_basis.Length; i++)
+            {
+                for (int j = i + 1; j < new_basis.Length; j++)
+                {
+                    if (new_basis[i][0] > new_basis[j][0])
+                    {
+                        int[] count = new_basis[j];
+                        new_basis[j] = new_basis[i];
+                        new_basis[i] = count;
+                    }
+                }
+            }
+            String taskWindow = "\r\nБазис:\r\nX = (";
+            for (int i = 0; i < new_basis.Length; i++)
+            {
+                if (i == basis.Length - 1)
+                    taskWindow += new_basis[i][1];
+                else
+                    taskWindow += new_basis[i][1] + ", ";
+            }
+            taskWindow += ")";
+            return taskWindow;
+        }
+        /// <summary>
         /// Печатает условие задачи
         /// </summary>
         /// <returns></returns>
@@ -215,17 +255,7 @@ namespace MO_02
                 taskWindow = taskWindow + "\r\n";
             }
             if (basis != null)
-            {
-                taskWindow += "\r\nБазис:\r\nX = (";
-                for (int i=0; i<basis.Length; i++)
-                {
-                    if (i == basis.Length - 1)
-                        taskWindow = taskWindow + basis[i][1];
-                    else
-                        taskWindow = taskWindow + basis[i][1] + ", ";
-                }
-                taskWindow += ")";
-            }
+                taskWindow += printBasis(ordinaryFraction);
             return taskWindow;
         }
     }

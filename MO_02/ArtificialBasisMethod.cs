@@ -11,7 +11,7 @@ namespace MO_02
     /// </summary>
     class ArtificialBasisMethod
     {
-        Task task;
+        public Task task;
         public ArtificialBasisMethod(Task task)
         {
             this.task = task;
@@ -33,39 +33,65 @@ namespace MO_02
             {
                 NewTable(table);
                 NewBasis();
-                //Console.WriteLine("Новая таблица");
-                //print();
-
             }
             SimplexTable simplexTable = new SimplexTable(task);
             //Временно 
-            //simplexTable.MainSimplexTable(step_by_step);
+            simplexTable.MainSimplexTable(step_by_step);
+        }
+        /// <summary>
+        /// Сортирует столбцы таблицы по новому базису
+        /// </summary>
+        public void SSS(OrdinaryFraction[][] table)
+        {
+            for (int i = 0; i < task.basis.Length; i++)
+            {
+                for (int j = i + 1; j < task.basis.Length; j++)
+                {
+                    if (task.basis[i][1] < task.basis[j][1])
+                    {
+                        int[] count = task.basis[j];
+                        task.basis[j] = task.basis[i];
+                        task.basis[i] = count;
+
+                        OrdinaryFraction[] cout = new OrdinaryFraction[task.condition.Length];
+                        for (int k = 0; k < table.Length; k++)
+                        {
+                            OrdinaryFraction t = table[k][i];
+                            table[k][i] = table[k][j];
+                            table[k][j] = t;
+                        }
+                    }
+                }
+            }
         }
         /// <summary>
         /// Убирает из таблицы вспомогательные переменные
         /// </summary>
         public void NewTable(OrdinaryFraction[][] table)
         {
-            for (int i = 0; i < task.condition[0].Length; i++)
-                for (int j = 0; j < task.condition.Length; j++)
+            for (int i=0; i<task.condition.Length; i++)
+            {
+                for (int j=0; j<task.condition.Length; j++)
                 {
-                    int count = -1;
-                    if (i < task.condition[0].Length - 1)
-                        count = task.basis[i + task.condition.Length][0];
-                    if (count > task.function.Length)
-                    {
-                        if (i == j)
-                            task.condition[j][i] = new OrdinaryFraction(1);
-                        else
-                            task.condition[j][i] = new OrdinaryFraction(0);
-                    }
+                    if (i == j)
+                        task.condition[j][i] = new OrdinaryFraction(1);
                     else
-                    {
-                        task.condition[j][i] = table[j][i];
-                        task.condition[j][i] = table[j][i];
-                    }
+                        task.condition[j][i] = new OrdinaryFraction(0);
                 }
-
+            }
+            for (int i=0, k = task.condition.Length; i<table[0].Length-1; i++)
+            {
+                if (task.basis[i + task.condition.Length][0] <= task.function.Length)
+                {
+                    for (int j=0; j<table.Length-1; j++)
+                    {
+                        task.condition[j][k] = table[j][i];
+                    }
+                    k++;
+                }
+            }
+            for (int i = 0; i < task.condition.Length; i++)
+                task.condition[i][task.condition[i].Length - 1] = table[i][table[i].Length - 1];
         }
         /// <summary>
         /// Создает новый базис для решения задачи
@@ -73,12 +99,13 @@ namespace MO_02
         public void NewBasis()
         {
             int[][] new_basis = new int[task.function.Length][];
-            for (int i = 0, j = 0; i < task.basis.Length; i++)
+            int k = 0;
+            for (int i=0; i<task.basis.Length; i++)
             {
-                if (task.basis[i][0] <= task.function.Length)
-                {
-                    new_basis[j++] = task.basis[i];
-                }
+                if (task.basis[i][1] == 1)
+                    new_basis[k++] = task.basis[i];
+                if ((task.basis[i][1] == 0) && (task.basis[i][0] <= task.function.Length))
+                    new_basis[k++] = task.basis[i];
             }
             task.basis = new_basis;
         }
