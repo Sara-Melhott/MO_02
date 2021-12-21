@@ -117,7 +117,10 @@ namespace MO_02
             }
             if (comboBox1.SelectedItem == "Графический метод")
             {
-                Form5 form = new Form5(task);
+                bool ordinaryFraction = true;
+                if (comboBox4.SelectedItem == "Десятичные")
+                    ordinaryFraction = false;
+                Form5 form = new Form5(task, ordinaryFraction);
                 form.FormClosed += OnFormClosed;
                 Hide();
                 form.Show();

@@ -41,10 +41,16 @@ namespace MO_02
         {
             this.task = task;
         }
+        /// <summary>
+        /// Главый метод решения задачи графичским способом
+        /// </summary>
+        /// <param name="ordinaryFraction"></param>
+        /// <returns></returns>
         public string MainGraphicalMethod(bool ordinaryFraction)
         {
             if (task.function.Length == 2)
             {
+                AddRestrictions();
                 GaussMethod gaussMethod = new GaussMethod(task.Clone());
                 points = gaussMethod.MainFindPoit();
                 Check(task);
@@ -180,6 +186,35 @@ namespace MO_02
                 }
             }
             return task.answer;
+        }
+        /// <summary>
+        /// Добавляет к задаче ограничения неотрицательности для всех неизвестных
+        /// </summary>
+        public void AddRestrictions()
+        {
+            OrdinaryFraction[] row1 = { new OrdinaryFraction(1), new OrdinaryFraction(0), new OrdinaryFraction(0) };
+            OrdinaryFraction[] row2 = { new OrdinaryFraction(0), new OrdinaryFraction(1), new OrdinaryFraction(0) };
+            OrdinaryFraction[][] new_conditions = new OrdinaryFraction[task.condition.Length+2][];
+            //Копированеи условий
+            for (int i = 0; i < task.condition.Length; i++)
+            {
+                OrdinaryFraction[] row_con = new OrdinaryFraction[task.condition[0].Length];
+                for (int j = 0; j < task.condition[0].Length; j++)
+                {
+                    row_con[j] = task.condition[i][j].Copy();
+                }
+                new_conditions[i] = row_con;
+            }
+            new_conditions[new_conditions.Length - 2] = row1;
+            new_conditions[new_conditions.Length - 1] = row2;
+            task.condition = new_conditions;
+
+            string[] new_sign = new string[task.sign.Length + 2];
+            for (int i = 0; i < task.sign.Length; i++)
+                new_sign[i] = task.sign[i];
+            new_sign[new_sign.Length - 2] = ">=";
+            new_sign[new_sign.Length - 2] = ">=";
+            task.sign = new_sign;
         }
         /// <summary>
         /// Преобразование задачи к двумерному виду

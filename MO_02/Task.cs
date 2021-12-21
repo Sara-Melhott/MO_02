@@ -226,7 +226,7 @@ namespace MO_02
             return taskWindow;
         }
         /// <summary>
-        /// Печатает условие задачи
+        /// Превращает условие задачи в строку
         /// </summary>
         /// <returns></returns>
         public string print(bool ordinaryFraction)
