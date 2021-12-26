@@ -75,25 +75,32 @@ namespace MO_02
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
-                return;
-            string filepath = openFileDialog1.FileName;
-            XmlFiles xml = new XmlFiles();
-            Task task = xml.ReadFile(filepath);
-            if (task.answer != null)
+            try
             {
-                MessageBox.Show("Данные в файле не подходят для решения задачи!");
+                if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                    return;
+                string filepath = openFileDialog1.FileName;
+                XmlFiles xml = new XmlFiles();
+                Task task = xml.ReadFile(filepath);
+                if (task.answer != null)
+                {
+                    MessageBox.Show("Данные в файле не подходят для решения задачи!");
+                }
+                else if (task.function.Length > 16 || task.condition.Length > 16)
+                {
+                    MessageBox.Show("Слишком много переменных или условий!\n(Максимум 16)");
+                }
+                else
+                {
+                    Form2 form2 = new Form2(task);
+                    form2.FormClosed += OnFormClosed;
+                    Hide();
+                    form2.Show();
+                }
             }
-            else if (task.function.Length > 16 || task.condition.Length > 16)
+            catch
             {
-                MessageBox.Show("Слишком много переменных или условий!\n(Максимум 16)");
-            }
-            else
-            {
-                Form2 form2 = new Form2(task);
-                form2.FormClosed += OnFormClosed;
-                Hide();
-                form2.Show();
+                MessageBox.Show("Упс, с этим файлом что-то не так)");
             }
         }
         /// <summary>
@@ -103,41 +110,49 @@ namespace MO_02
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            Task task = NewTask();
-            if (task.answer != null)
+            try
             {
-                MessageBox.Show("Данные задачи не корректны!");
-                return;
+                Task task = NewTask();
+                if (task.answer != null)
+                {
+                    MessageBox.Show("Данные задачи не корректны!");
+                    return;
+                }
+                if (checkBox1.Checked == true)
+                {
+                    XmlFiles xml = new XmlFiles();
+                    xml.WriteFile(task);
+                    MessageBox.Show("Задача сохранена в файл output.xml");
+                }
+                if (comboBox1.SelectedItem == "Графический метод")
+                {
+                    bool ordinaryFraction = true;
+                    if (comboBox4.SelectedItem == "Десятичные")
+                        ordinaryFraction = false;
+                    Form5 form = new Form5(task, ordinaryFraction);
+                    form.FormClosed += OnFormClosed;
+                    Hide();
+                    form.Show();
+                }
+                else
+                {
+                    bool step = false;
+                    bool ordinaryFraction = true;
+                    if (comboBox3.SelectedItem == "Пошаговый режим")
+                        step = true;
+                    if (comboBox4.SelectedItem == "Десятичные")
+                        ordinaryFraction = false;
+                    Form4 form = new Form4(task, step, ordinaryFraction);
+                    form.FormClosed += OnFormClosed;
+                    Hide();
+                    form.Show();
+                }
             }
-            if (checkBox1.Checked == true)
+            catch
             {
-                XmlFiles xml = new XmlFiles();
-                xml.WriteFile(task);
-                MessageBox.Show("Задача сохранена в файл output.xml");
+                MessageBox.Show("Эту задачу мы решить не сможем =(");
             }
-            if (comboBox1.SelectedItem == "Графический метод")
-            {
-                bool ordinaryFraction = true;
-                if (comboBox4.SelectedItem == "Десятичные")
-                    ordinaryFraction = false;
-                Form5 form = new Form5(task, ordinaryFraction);
-                form.FormClosed += OnFormClosed;
-                Hide();
-                form.Show();
-            }
-            else
-            {
-                bool step = false;
-                bool ordinaryFraction = true;
-                if (comboBox3.SelectedItem == "Пошаговый режим")
-                    step = true;
-                if (comboBox4.SelectedItem == "Десятичные")
-                    ordinaryFraction = false;
-                Form4 form = new Form4(task, step, ordinaryFraction);
-                form.FormClosed += OnFormClosed;
-                Hide();
-                form.Show();
-            }
+            
         }
         /// <summary>
         /// Выбор метода решения
@@ -415,6 +430,19 @@ namespace MO_02
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+        /// <summary>
+        /// Кнопка "Справка"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Привет, дорогой друг!\nВ этом приложении ты сможешь решить задачи по линейномй программированию." +
+                " А именно: с помощью метода искусственого базиса, метода симплекс таблиц и графического метода. Задачи ты можешь" +
+                " ввести либо вручную здесь, либо прочитать из файла. Но будь осторожен, важно соблюдать формат ввода данных! " +
+                "И тут используются только файлы расширения xml!\nМы долго писали это приложения и надемся тебе понравится =)\n\n" +
+                "C уважением, автор сея приложения)\n\nПетрова Анастасия, группа ИТ-31");
         }
     }
 }

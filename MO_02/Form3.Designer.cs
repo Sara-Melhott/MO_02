@@ -53,6 +53,7 @@ namespace MO_02
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.number_x)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.number_condition)).BeginInit();
@@ -62,26 +63,29 @@ namespace MO_02
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 55);
+            this.label1.Location = new System.Drawing.Point(9, 45);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(174, 17);
+            this.label1.Size = new System.Drawing.Size(135, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Количество неизвестных";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 88);
+            this.label2.Location = new System.Drawing.Point(9, 72);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(143, 17);
+            this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Количество условий";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(15, 117);
+            this.button1.Location = new System.Drawing.Point(11, 95);
+            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 26);
+            this.button1.Size = new System.Drawing.Size(86, 21);
             this.button1.TabIndex = 7;
             this.button1.Text = "Применить";
             this.button1.UseVisualStyleBackColor = true;
@@ -90,72 +94,80 @@ namespace MO_02
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(289, 22);
+            this.dataGridView1.Location = new System.Drawing.Point(217, 18);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(653, 370);
+            this.dataGridView1.Size = new System.Drawing.Size(490, 301);
             this.dataGridView1.TabIndex = 8;
             this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(15, 178);
+            this.comboBox1.Location = new System.Drawing.Point(11, 145);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(245, 24);
+            this.comboBox1.Size = new System.Drawing.Size(185, 21);
             this.comboBox1.TabIndex = 9;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 158);
+            this.label3.Location = new System.Drawing.Point(9, 128);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 17);
+            this.label3.Size = new System.Drawing.Size(86, 13);
             this.label3.TabIndex = 10;
             this.label3.Text = "Метод решения";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 348);
+            this.label4.Location = new System.Drawing.Point(9, 283);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 17);
+            this.label4.Size = new System.Drawing.Size(38, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Базис";
             // 
             // comboBox2
             // 
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(15, 368);
+            this.comboBox2.Location = new System.Drawing.Point(11, 299);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(245, 24);
+            this.comboBox2.Size = new System.Drawing.Size(185, 21);
             this.comboBox2.TabIndex = 12;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 254);
+            this.label5.Location = new System.Drawing.Point(11, 206);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 17);
+            this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 13;
             this.label5.Text = "Режим";
             // 
             // comboBox3
             // 
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(15, 274);
+            this.comboBox3.Location = new System.Drawing.Point(11, 223);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(245, 24);
+            this.comboBox3.Size = new System.Drawing.Size(185, 21);
             this.comboBox3.TabIndex = 14;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(840, 559);
+            this.button2.Location = new System.Drawing.Point(630, 454);
+            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(102, 32);
+            this.button2.Size = new System.Drawing.Size(76, 26);
             this.button2.TabIndex = 15;
             this.button2.Text = "Решить";
             this.button2.UseVisualStyleBackColor = true;
@@ -163,69 +175,77 @@ namespace MO_02
             // 
             // number_x
             // 
-            this.number_x.Location = new System.Drawing.Point(192, 55);
+            this.number_x.Location = new System.Drawing.Point(144, 45);
+            this.number_x.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.number_x.Name = "number_x";
-            this.number_x.Size = new System.Drawing.Size(68, 22);
+            this.number_x.Size = new System.Drawing.Size(51, 20);
             this.number_x.TabIndex = 16;
             // 
             // number_condition
             // 
-            this.number_condition.Location = new System.Drawing.Point(192, 82);
+            this.number_condition.Location = new System.Drawing.Point(144, 67);
+            this.number_condition.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.number_condition.Name = "number_condition";
-            this.number_condition.Size = new System.Drawing.Size(68, 22);
+            this.number_condition.Size = new System.Drawing.Size(51, 20);
             this.number_condition.TabIndex = 17;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 405);
+            this.label6.Location = new System.Drawing.Point(9, 329);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(105, 17);
+            this.label6.Size = new System.Drawing.Size(82, 13);
             this.label6.TabIndex = 18;
             this.label6.Text = "Введите базис";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 301);
+            this.label7.Location = new System.Drawing.Point(9, 245);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(51, 17);
+            this.label7.Size = new System.Drawing.Size(40, 13);
             this.label7.TabIndex = 19;
             this.label7.Text = "Дроби";
             // 
             // comboBox4
             // 
             this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(15, 321);
+            this.comboBox4.Location = new System.Drawing.Point(11, 261);
+            this.comboBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(245, 24);
+            this.comboBox4.Size = new System.Drawing.Size(185, 21);
             this.comboBox4.TabIndex = 20;
             // 
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(15, 425);
+            this.dataGridView2.Location = new System.Drawing.Point(11, 345);
+            this.dataGridView2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(927, 108);
+            this.dataGridView2.Size = new System.Drawing.Size(695, 88);
             this.dataGridView2.TabIndex = 21;
             this.dataGridView2.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView2_CellValidating);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 22);
+            this.label8.Location = new System.Drawing.Point(11, 18);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(123, 17);
+            this.label8.Size = new System.Drawing.Size(94, 13);
             this.label8.TabIndex = 22;
             this.label8.Text = "Чтение из файла";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(144, 17);
+            this.button3.Location = new System.Drawing.Point(108, 14);
+            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(115, 26);
+            this.button3.Size = new System.Drawing.Size(86, 21);
             this.button3.TabIndex = 23;
             this.button3.Text = "Открыть";
             this.button3.UseVisualStyleBackColor = true;
@@ -234,26 +254,29 @@ namespace MO_02
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 205);
+            this.label9.Location = new System.Drawing.Point(9, 167);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(148, 17);
+            this.label9.Size = new System.Drawing.Size(113, 13);
             this.label9.TabIndex = 24;
             this.label9.Text = "Задача оптимизации";
             // 
             // comboBox5
             // 
             this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(15, 225);
+            this.comboBox5.Location = new System.Drawing.Point(11, 183);
+            this.comboBox5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(245, 24);
+            this.comboBox5.Size = new System.Drawing.Size(185, 21);
             this.comboBox5.TabIndex = 25;
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(18, 559);
+            this.checkBox1.Location = new System.Drawing.Point(108, 460);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(250, 21);
+            this.checkBox1.Size = new System.Drawing.Size(194, 17);
             this.checkBox1.TabIndex = 26;
             this.checkBox1.Text = "Записать условие задачи в файл";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -263,11 +286,22 @@ namespace MO_02
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(11, 454);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(76, 26);
+            this.button4.TabIndex = 27;
+            this.button4.Text = "Справка";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(970, 605);
+            this.ClientSize = new System.Drawing.Size(728, 492);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.comboBox5);
             this.Controls.Add(this.label9);
@@ -290,6 +324,7 @@ namespace MO_02
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form3";
             this.Text = "Form3";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -327,5 +362,6 @@ namespace MO_02
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button button4;
     }
 }

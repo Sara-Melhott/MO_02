@@ -84,20 +84,28 @@ namespace MO_02
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
-            listEl = simplex.FindReferenceElement();
-            int[] el = ChooseEl(listEl);
-            if (el == null) return;
-            //Получение ответа от пользователя (выбор опорного элемента)
-            stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
-            simplex.NewSimplexTable(el);
-            if (MIB && !findBasis)
-                NumberTableMIB++;
-            ++number_table;
-            button2.Enabled = true;
-            if (findBasis)
-                Main();
-            else
-                ArtificialBasis();
+            try
+            {
+                listEl = simplex.FindReferenceElement();
+                int[] el = ChooseEl(listEl);
+                if (el == null) return;
+                //Получение ответа от пользователя (выбор опорного элемента)
+                stack.Push(new ArrayList { simplex.tableCopy(), simplex.task.Clone() });
+                simplex.NewSimplexTable(el);
+                if (MIB && !findBasis)
+                    NumberTableMIB++;
+                ++number_table;
+                button2.Enabled = true;
+                if (findBasis)
+                    Main();
+                else
+                    ArtificialBasis();
+            }
+            catch
+            {
+                MessageBox.Show("Тут что-то поломалось. Обещаем починить!");
+            }
+            
         }
         /// <summary>
         /// Кнопка "Назад"
@@ -106,28 +114,35 @@ namespace MO_02
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            ArrayList list = stack.Pop();
-            simplex.table = (OrdinaryFraction[][])list[0];
-            simplex.task = (Task)list[1];
-            listEl = simplex.FindReferenceElement();
-            --number_table;
-            if (number_table < 0)
+            try
             {
-                list = stack.Pop();
+                ArrayList list = stack.Pop();
                 simplex.table = (OrdinaryFraction[][])list[0];
                 simplex.task = (Task)list[1];
                 listEl = simplex.FindReferenceElement();
-                number_table = NumberTableMIB - 1;
-                findBasis = false;
+                --number_table;
+                if (number_table < 0)
+                {
+                    list = stack.Pop();
+                    simplex.table = (OrdinaryFraction[][])list[0];
+                    simplex.task = (Task)list[1];
+                    listEl = simplex.FindReferenceElement();
+                    number_table = NumberTableMIB - 1;
+                    findBasis = false;
+                    PrintDeleteTable();
+                }
+                if (MIB && !findBasis)
+                    NumberTableMIB--;
+                button3.Enabled = true;
+                textBox2.Text = "";
+                //Удаление последней таблицы в dataGridView1
                 PrintDeleteTable();
+                if (Table.Rows.Count == simplex.table.Length + 2) button2.Enabled = false;
             }
-            if (MIB && !findBasis)
-                NumberTableMIB--;
-            button3.Enabled = true;
-            textBox2.Text = "";
-            //Удаление последней таблицы в dataGridView1
-            PrintDeleteTable();
-            if (Table.Rows.Count == simplex.table.Length + 2) button2.Enabled = false;
+            catch
+            {
+                MessageBox.Show("Тут что-то поломалось. Обещаем починить!");
+            }
         }
         /// <summary>
         /// Кнопка "В главное меню"
@@ -479,7 +494,7 @@ namespace MO_02
         private void dataGridView1_DataSourceChanged(object sender, EventArgs e)
         {
 
-         }
+        }
 
         private void dataGridView1_AllowUserToAddRowsChanged(object sender, EventArgs e)
         {

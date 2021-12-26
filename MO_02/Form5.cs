@@ -29,7 +29,6 @@ namespace MO_02
             textBox1.Multiline = true;
             textBox1.ReadOnly = true;
             textBox1.Text = task.print(ordinaryFraction);
-            //Main();
         }
         /// <summary>
         /// Кнопка "В главное меню"
@@ -41,7 +40,7 @@ namespace MO_02
             Close();
         }
         //Сортирует точки для удобного рисования графика
-        private void SortPoints()
+        private void SortPoints(bool temp)
         {
             for (int i = 0; i < points.Count; i++)
             {
@@ -55,11 +54,23 @@ namespace MO_02
                     }
                     else if (points[i].x.Equally(points[j].x))
                     {
-                        if (points[i].y.Min(points[j].y))
+                        if (temp)
                         {
-                            Point p = new Point(points[i].x.Copy(), points[i].y.Copy());
-                            points[i] = new Point(points[j].x.Copy(), points[j].y.Copy());
-                            points[j] = p;
+                            if (points[i].y.Max(points[j].y))
+                            {
+                                Point p = new Point(points[i].x.Copy(), points[i].y.Copy());
+                                points[i] = new Point(points[j].x.Copy(), points[j].y.Copy());
+                                points[j] = p;
+                            }
+                        }
+                        else
+                        {
+                            if (points[i].y.Min(points[j].y))
+                            {
+                                Point p = new Point(points[i].x.Copy(), points[i].y.Copy());
+                                points[i] = new Point(points[j].x.Copy(), points[j].y.Copy());
+                                points[j] = p;
+                            }
                         }
                     }
                 }
@@ -77,33 +88,118 @@ namespace MO_02
             Pen pen = new Pen(Color.Black, 2f);
             Pen pen2 = new Pen(Color.Red, 2f);
             Pen pen3 = new Pen(Color.Yellow, 4f);
+            Pen pen4 = new Pen(Color.Green, 2f);
+            Pen pen5 = new Pen(Color.Orange, 3f);
             SolidBrush br = new SolidBrush(Color.Green);
             SolidBrush br2 = new SolidBrush(Color.Yellow);
 
             //Оси 
-            graphics.DrawLine(pen, new System.Drawing.Point(10, 0), new System.Drawing.Point(10, y));
-            graphics.DrawLine(pen, new System.Drawing.Point(0, y - 10), new System.Drawing.Point(x, y - 10));
+            graphics.DrawLine(pen, new System.Drawing.Point(20, 0), new System.Drawing.Point(20, y));
+            graphics.DrawLine(pen, new System.Drawing.Point(0, y - 20), new System.Drawing.Point(x, y - 20));
+            string axis_x = "x1";
+            string axis_y = "x2";
+            //Для вектора градиента
+            int n1 = 1;
+            int n2 = 2;
+            if (task.basis != null)
+            for (int i = 0, count = 0; count < 2; i++)
+            {
+                if (task.basis[i][1] == 0)
+                {
+                    count++;
+                    if (count == 1)
+                    {
+                        axis_x = "x" + task.basis[i][0];
+                        n1 = task.basis[i][0];
+                    }
+                    else
+                    {
+                        axis_y = "x" + task.basis[i][0];
+                        n2 = task.basis[i][0];
+                    }
+                        
+                }
+            }
+            graphics.DrawString(axis_x, new Font(Font.FontFamily, 8) , new SolidBrush(Color.Black), x - 20, y - 18);
+            graphics.DrawString(axis_y, new Font(Font.FontFamily, 8), new SolidBrush(Color.Black), 3, 5);
 
             //Получившаяся область 
             System.Drawing.Point[] polygon = new System.Drawing.Point[points.Count];
-            SortPoints();
+            SortPoints(true);
             for (int i=0; i<points.Count; i++)
             {
+                int x0 = (int)(Math.Round(points[i].x.toDecimalFraction(), 1)*20);
+                int y0 = (int)(Math.Round(points[i].y.toDecimalFraction(), 1)*20);
+
+                polygon[i] = new System.Drawing.Point(x0 + 20, y - y0 - 20);
+            }
+            graphics.DrawPolygon(pen4, polygon);
+            graphics.FillPolygon(br, polygon);
+
+            SortPoints(false);
+            for (int i = 0; i < points.Count; i++)
+            {
+                int x0 = (int)(Math.Round(points[i].x.toDecimalFraction(), 1) * 20);
+                int y0 = (int)(Math.Round(points[i].y.toDecimalFraction(), 1) * 20);
+
+                polygon[i] = new System.Drawing.Point(x0 + 20, y - y0 - 20);
+            }
+            graphics.DrawPolygon(pen4, polygon);
+            graphics.FillPolygon(br, polygon);
+
+            //Рисуем ответ
+            if (graphicalMethod.answer_point.Count == 2)
+            {
+                //Отрезок
+                int x0 = (int)(Math.Round(graphicalMethod.answer_point[0].x.toDecimalFraction(), 1) * 20);
+                int y0 = (int)(Math.Round(graphicalMethod.answer_point[0].y.toDecimalFraction(), 1) * 20);
+                int x1 = (int)(Math.Round(graphicalMethod.answer_point[1].x.toDecimalFraction(), 1) * 20);
+                int y1 = (int)(Math.Round(graphicalMethod.answer_point[1].y.toDecimalFraction(), 1) * 20);
+
+                graphics.DrawLine(pen3, x0 + 20, y - y0 - 20, x1 + 20, y - y1 - 20);
+                string answer_point = "(" + graphicalMethod.answer_point[0].x.toDecimalFraction() + ", " + graphicalMethod.answer_point[0].y.toDecimalFraction() + ")";
+                graphics.DrawString(answer_point, new Font(Font.FontFamily, 8), new SolidBrush(Color.Red), x0 + 20, y - y0 - 20);
+                answer_point = "(" + graphicalMethod.answer_point[1].x.toDecimalFraction() + ", " + graphicalMethod.answer_point[1].y.toDecimalFraction() + ")";
+                graphics.DrawString(answer_point, new Font(Font.FontFamily, 8), new SolidBrush(Color.Red), x1 + 20, y - y1 - 20);
+            }
+            else if ((graphicalMethod.answer_point.Count == 1) && graphicalMethod.line)
+            {
+                //Луч
 
             }
-            polygon[0] = new System.Drawing.Point(10, y - 10);
+            else if ((graphicalMethod.answer_point.Count == 1) && !graphicalMethod.line)
+            {
+                //Точка
+                int x0 = (int)(Math.Round(graphicalMethod.answer_point[0].x.toDecimalFraction(), 1) * 20);
+                int y0 = (int)(Math.Round(graphicalMethod.answer_point[0].y.toDecimalFraction(), 1) * 20);
+
+                graphics.FillEllipse(br2, x0 - 4 + 20, y - y0 - 2 - 20, 6, 6);
+                string answer_point = "(" + graphicalMethod.answer_point[0].x.toDecimalFraction() + ", " + graphicalMethod.answer_point[0].y.toDecimalFraction() + ")";
+                graphics.DrawString(answer_point, new Font(Font.FontFamily, 8), new SolidBrush(Color.Red), x0 + 20, y - y0 - 20);
+            }
+
+            //Рисуем вектор градиент
+            n1 = (int)(Math.Round(graphicalMethod.new_task.function[0].toDecimalFraction(), 1) * 20);
+            n2 = (int)(Math.Round(graphicalMethod.new_task.function[1].toDecimalFraction(), 1) * 20);
+            graphics.DrawLine(pen5, 20, y-20, n1 + 20, y - n2 - 20);
+
+            /*polygon[0] = new System.Drawing.Point(10, y - 10); точка (0,0)
             polygon[1] = new System.Drawing.Point(10, y - 50);
             polygon[2] = new System.Drawing.Point(35, y - 50);
             polygon[3] = new System.Drawing.Point(50, y - 35);
-            polygon[4] = new System.Drawing.Point(50, y - 10);
-
-            graphics.DrawPolygon(pen, polygon);
-            graphics.FillPolygon(br, polygon);
+            polygon[4] = new System.Drawing.Point(50, y - 10);*/
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Main();
+            try
+            {
+                Main();
+            }
+            catch
+            {
+                MessageBox.Show("Эту задачу мы решить не сможем =(");
+            }
         }
     }
 }

@@ -34,6 +34,11 @@ namespace MO_02
                 label4.Visible = false;
                 textBox2.Visible = false;
             }
+            if (task.function.Length <= 2)
+            {
+                label4.Visible = false;
+                textBox2.Visible = false;
+            }
         }
         /// <summary>
         /// Кнопка "Отмена"
@@ -51,57 +56,65 @@ namespace MO_02
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            if (task.function.Length > 2)
+            try
             {
-                for (int i=0; i<task.sign.Length; i++)
+                if (task.function.Length > 2)
                 {
-                    if (task.sign[i] == "<=" || task.sign[i] == ">=")
+                    for (int i = 0; i < task.sign.Length; i++)
+                    {
+                        if (task.sign[i] == "<=" || task.sign[i] == ">=")
+                        {
+                            MessageBox.Show("Задача не приведена к канонической форме!");
+                            return;
+                        }
+                    }
+                }
+                if (task.function.Length <= 2)
+                {
+                    bool sign1 = false;
+                    bool sign2 = false;
+                    for (int i = 0; i < task.sign.Length; i++)
+                    {
+                        if (task.sign[i] == "<=" || task.sign[i] == ">=")
+                            sign1 = true;
+                        if (task.sign[i] == "=")
+                            sign2 = false;
+                    }
+                    if (sign1 && sign2)
                     {
                         MessageBox.Show("Задача не приведена к канонической форме!");
                         return;
                     }
                 }
-            }
-            if (task.function.Length <= 2)
-            {
-                bool sign1 = false;
-                bool sign2 = false;
-                for (int i=0; i<task.sign.Length; i++)
+                if (comboBox1.SelectedItem == "Графический метод")
                 {
-                    if (task.sign[i] == "<=" || task.sign[i] == ">=")
-                        sign1 = true;
-                    if (task.sign[i] == "=")
-                        sign2 = true;
+                    bool ordinaryFraction = true;
+                    if (comboBox3.SelectedItem == "Десятичные")
+                        ordinaryFraction = false;
+                    Form5 form = new Form5(task, ordinaryFraction);
+                    form.FormClosed += OnFormClosed;
+                    Hide();
+                    form.Show();
                 }
-                if (sign1 && sign2)
+                else
                 {
-                    MessageBox.Show("Задача не приведена к канонической форме!");
-                    return;
+                    bool step = false;
+                    bool ordinaryFraction = true;
+                    if (comboBox4.SelectedItem == "Пошаговый режим")
+                        step = true;
+                    if (comboBox3.SelectedItem == "Десятичные")
+                        ordinaryFraction = false;
+                    Form4 form = new Form4(task, step, ordinaryFraction);
+                    form.FormClosed += OnFormClosed;
+                    Hide();
+                    form.Show();
                 }
             }
-            if (comboBox1.SelectedItem == "Графический метод")
+            catch
             {
-                bool ordinaryFraction = true;
-                if (comboBox4.SelectedItem == "Десятичные")
-                    ordinaryFraction = false;
-                Form5 form = new Form5(task, ordinaryFraction);
-                form.FormClosed += OnFormClosed;
-                Hide();
-                form.Show();
+                MessageBox.Show("Эту задачу мы решить не сможем =(");
             }
-            else
-            {
-                bool step = false;
-                bool ordinaryFraction = true;
-                if (comboBox4.SelectedItem == "Пошаговый режим")
-                    step = true;
-                if (comboBox3.SelectedItem == "Десятичные")
-                    ordinaryFraction = false;
-                Form4 form = new Form4(task, step, ordinaryFraction);
-                form.FormClosed += OnFormClosed;
-                Hide();
-                form.Show();
-            }
+            
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -127,6 +140,15 @@ namespace MO_02
                         MessageBox.Show("Данную задачу можно решить только графическим методом!");
                     }
                 }
+                else
+                {
+                    if (task.basis == null)
+                    {
+                        label4.Visible = true;
+                        textBox2.Visible = true;
+                    }
+                    
+                }
             }
             else
             {
@@ -150,6 +172,8 @@ namespace MO_02
                 }
                 label1.Visible = false;
                 comboBox4.Visible = false;
+                label4.Visible = false;
+                textBox2.Visible = false;
             }
         }
         private void OnFormClosed(object sender, EventArgs e)

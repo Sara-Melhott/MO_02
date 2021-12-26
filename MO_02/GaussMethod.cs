@@ -31,6 +31,7 @@ namespace MO_02
         /// <returns></returns>
         public List<Point> MainFindPoit()
         {
+            Task task = AddBorders();
             List<Point> points = new List<Point>();
             for (int i = 0; i < task.condition.Length; i++)
             {
@@ -50,6 +51,32 @@ namespace MO_02
                 }
             }
             return points;
+        }
+        /// <summary>
+        /// Добавляет границы рамки 
+        /// </summary>
+        /// <returns></returns>
+        public Task AddBorders()
+        {
+            OrdinaryFraction[][] borders = new OrdinaryFraction[2][];
+            borders[0] = new OrdinaryFraction[] { new OrdinaryFraction(1), new OrdinaryFraction(0), new OrdinaryFraction(336) };
+            borders[1] = new OrdinaryFraction[] { new OrdinaryFraction(0), new OrdinaryFraction(1), new OrdinaryFraction(339) };
+            Task new_task = task.Clone();
+            OrdinaryFraction[][] new_conditions = new OrdinaryFraction[task.condition.Length + 2][];
+            for (int i = 0; i < task.condition.Length; i++)
+                new_conditions[i] = task.CopyArray(task.condition[i]);
+            new_conditions[new_conditions.Length - 2] = borders[0];
+            new_conditions[new_conditions.Length - 1] = borders[1];
+            new_task.condition = new_conditions;
+
+            string[] new_sign = new string[task.sign.Length + 2];
+            for (int i = 0; i < task.sign.Length; i++)
+                new_sign[i] = task.sign[i];
+            new_sign[new_sign.Length - 2] = "<=";
+            new_sign[new_sign.Length - 1] = "<=";
+            new_task.sign = new_sign;
+
+            return new_task;
         }
         /// <summary>
         /// Деление коэфициентов функции fun на коэфициент в столбце number_col 

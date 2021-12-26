@@ -416,7 +416,10 @@ namespace MO_02
                     task.answer = task.answer + ", " + x[i].Print(ordinaryFraction);
                 }
                 x[x.Length - 1] = table[table.Length - 1][table[0].Length - 1];
-                task.answer = task.answer + ") f* = " + table[table.Length - 1][table[0].Length - 1].Print(ordinaryFraction);
+                if (task.extr == "min")
+                    task.answer = task.answer + ") f* = " + table[table.Length - 1][table[0].Length - 1].Multiplication(new OrdinaryFraction(-1)).Print(ordinaryFraction);
+                else
+                    task.answer = task.answer + ") f* = " + table[table.Length - 1][table[0].Length - 1].Print(ordinaryFraction);
 
                 //Печать на консоль
                 Console.WriteLine(task.answer);

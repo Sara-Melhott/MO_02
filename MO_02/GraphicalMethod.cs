@@ -37,9 +37,13 @@ namespace MO_02
     {
         public Task task;
         public List<Point> points;
+        public List<Point> answer_point;
+        public bool line = false;
+        public Task new_task;
         public GraphicalMethod(Task task)
         {
             this.task = task;
+            this.new_task = task;
         }
         /// <summary>
         /// Главый метод решения задачи графичским способом
@@ -56,7 +60,7 @@ namespace MO_02
                 Check(task);
                 if (task.answer == null)
                 {
-                    List<Point> answer_point = FindAnswer(task);
+                    answer_point = FindAnswer(task);
                     answer_point = UniqPoints(answer_point);
                     if (answer_point.Count == 0)
                     {
@@ -64,21 +68,26 @@ namespace MO_02
                     }
                     else if (answer_point.Count == 1)
                     {
+                        OrdinaryFraction[] var = new OrdinaryFraction[] { answer_point[0].x, answer_point[0].y };
+                        task.answer = "Точка А = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ") f* = " + Answer(var).Print(ordinaryFraction);
+                    }
+                    else if (answer_point.Count > 1)
+                    {
                         int i = FindLines(task, answer_point[0]);
                         GaussMethod method = new GaussMethod(task.CopyArray(task.function), task.CopyArray(task.condition[i]));
                         if (method.MiniGausseMethod())
                         {
-                            task.answer = "Луч с началом в точке А = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ")";
+                            OrdinaryFraction[] var = new OrdinaryFraction[] { answer_point[0].x, answer_point[0].y };
+                            task.answer = "Луч с началом в точке А = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ") f* = " + Answer(var).Print(ordinaryFraction);
+                            line = true;
                         }
                         else
                         {
-                            task.answer = "Точка А = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ")";
+                            OrdinaryFraction[] var = new OrdinaryFraction[] { answer_point[0].x, answer_point[0].y };
+                            task.answer = "Отрезок AB: A = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ") B = ("
+                                + answer_point[1].x.Print(ordinaryFraction) + ", " + answer_point[1].y.Print(ordinaryFraction) + ") f* = " + Answer(var).Print(ordinaryFraction);
+
                         }
-                    }
-                    else if (answer_point.Count > 1)
-                    {
-                        task.answer = "Отрезок AB: A = (" + answer_point[0].x.Print(ordinaryFraction) + ", " + answer_point[0].y.Print(ordinaryFraction) + ") B = ("
-                            + answer_point[1].x.Print(ordinaryFraction) + ", " + answer_point[1].y.Print(ordinaryFraction) + ")";
                     }
                 }
             }
@@ -88,15 +97,15 @@ namespace MO_02
                 for (int i = 0; i < task.sign.Length; i++)
                     if (task.sign[i] == "=")
                         count++;
-                if (task.function.Length - (task.condition.Length - task.function.Length) > 2)
+                if (task.function.Length - task.condition.Length > 2)
                     task.answer = "Графического двумерного решения не существует";
                 else
                 {
                     //Преобазование задачи для использования Метода Гаусса
-                    Task new_task = TaskСonversionForGaussMethod();
+                    //Task new_task = TaskСonversionForGaussMethod();
 
                     //Преобразование с помощью метода Гаусса
-                    GaussMethod gaussMethod = new GaussMethod(new_task.Clone());
+                    GaussMethod gaussMethod = new GaussMethod(task.Clone());
                     new_task = gaussMethod.MainGaussMethod();
 
                     //Убираем из уравнений базисные переменные и приводим к двумерному виду 
@@ -108,7 +117,7 @@ namespace MO_02
                     Check(new_task);
                     if (task.answer == null)
                     {
-                        List<Point> answer_point = FindAnswer(new_task);
+                        answer_point = FindAnswer(new_task);
                         answer_point = UniqPoints(answer_point);
                         if (answer_point.Count == 0)
                         {
@@ -129,58 +138,72 @@ namespace MO_02
                                 }
                             }
 
+                            task.answer = "Точка А = (";
+                            for (int j = 0; j < var.Length - 1; j++)
+                            {
+                                task.answer = task.answer + var[j].Print(ordinaryFraction) + ", ";
+                            }
+                            task.answer = task.answer + var[var.Length - 1].Print(ordinaryFraction) + ") f* = " + Answer(var).Print(ordinaryFraction);
+                        }
+                        else if (answer_point.Count > 1)
+                        {
                             int i = FindLines(new_task, answer_point[0]);
                             GaussMethod method = new GaussMethod(new_task.CopyArray(new_task.function), new_task.CopyArray(new_task.condition[i]));
                             if (method.MiniGausseMethod())
                             {
+                                OrdinaryFraction[] var = new OrdinaryFraction[task.function.Length];
+                                for (int j = 0; j < var.Length; j++)
+                                {
+                                    if (new_task.basis[j][1] == 1)
+                                        var[new_task.basis[j][0] - 1] = new_task.condition[j][2].Subtraction(new_task.condition[j][0].Multiplication(answer_point[0].x).Addition(new_task.condition[j][1].Multiplication(answer_point[0].y)));
+                                    else if (new_task.basis[j][1] == 0)
+                                    {
+                                        var[new_task.basis[j][0] - 1] = answer_point[0].x;
+                                        var[new_task.basis[j + 1][0] - 1] = answer_point[0].y;
+                                        break;
+                                    }
+                                }
+
+                                line = true;
                                 task.answer = "Луч с началом в точке А = (";
                                 for (int j = 0; j < var.Length - 1; j++)
                                 {
                                     task.answer = task.answer + var[j].Print(ordinaryFraction) + ", ";
                                 }
-                                task.answer = task.answer + var[var.Length - 1].Print(ordinaryFraction) + ")";
+                                task.answer = task.answer + var[var.Length - 1].Print(ordinaryFraction) + ") f* = " + Answer(var).Print(ordinaryFraction);
                             }
                             else
                             {
-                                task.answer = "Точка А = (";
-                                for (int j = 0; j < var.Length - 1; j++)
+                                OrdinaryFraction[] var1 = new OrdinaryFraction[task.function.Length];
+                                OrdinaryFraction[] var2 = new OrdinaryFraction[task.function.Length];
+                                for (int j = 0; j < var1.Length; j++)
                                 {
-                                    task.answer = task.answer + var[j].Print(ordinaryFraction) + ", ";
+                                    if (task.basis[j][1] == 1)
+                                    {
+                                        var1[task.basis[j][0] - 1] = new_task.condition[j][2].Subtraction(new_task.condition[j][0].Multiplication(answer_point[0].x).Addition(new_task.condition[j][1].Multiplication(answer_point[0].y)));
+                                        var2[task.basis[j][0] - 1] = new_task.condition[j][2].Subtraction(new_task.condition[j][0].Multiplication(answer_point[1].x).Addition(new_task.condition[j][1].Multiplication(answer_point[1].y)));
+                                    }
+                                    else if (task.basis[j][1] == 0)
+                                    {
+                                        var1[task.basis[j][0] - 1] = answer_point[0].x;
+                                        var2[task.basis[j][0] - 1] = answer_point[1].x;
+                                        var1[task.basis[j + 1][0] - 1] = answer_point[0].y;
+                                        var2[task.basis[j + 1][0] - 1] = answer_point[1].y;
+                                        break;
+                                    }
                                 }
-                                task.answer = task.answer + var[var.Length - 1].Print(ordinaryFraction) + ")";
-                            }
-                        }
-                        else if (answer_point.Count > 1)
-                        {
-                            OrdinaryFraction[] var1 = new OrdinaryFraction[task.function.Length];
-                            OrdinaryFraction[] var2 = new OrdinaryFraction[task.function.Length];
-                            for (int j = 0; j < var1.Length; j++)
-                            {
-                                if (task.basis[j][1] == 1)
+                                task.answer = "Отрезок AB: A = (";
+                                for (int j = 0; j < var1.Length - 1; j++)
                                 {
-                                    var1[task.basis[j][0] - 1] = new_task.condition[j][2].Subtraction(new_task.condition[j][0].Multiplication(answer_point[0].x).Addition(new_task.condition[j][1].Multiplication(answer_point[0].y)));
-                                    var2[task.basis[j][0] - 1] = new_task.condition[j][2].Subtraction(new_task.condition[j][0].Multiplication(answer_point[1].x).Addition(new_task.condition[j][1].Multiplication(answer_point[1].y)));
+                                    task.answer = task.answer + var1[j].Print(ordinaryFraction) + ", ";
                                 }
-                                else if (task.basis[j][1] == 0)
+                                task.answer = task.answer + var1[var1.Length - 1].Print(ordinaryFraction) + ") B = (";
+                                for (int j = 0; j < var2.Length - 1; j++)
                                 {
-                                    var1[task.basis[j][0] - 1] = answer_point[0].x;
-                                    var2[task.basis[j][0] - 1] = answer_point[1].x;
-                                    var1[task.basis[j + 1][0] - 1] = answer_point[0].y;
-                                    var2[task.basis[j + 1][0] - 1] = answer_point[1].y;
-                                    break;
+                                    task.answer = task.answer + var2[j].Print(ordinaryFraction) + ", ";
                                 }
+                                task.answer = task.answer + var2[var2.Length - 1].Print(ordinaryFraction) + ") f* = " + Answer(var1).Print(ordinaryFraction);
                             }
-                            task.answer = "Отрезок AB: A = (";
-                            for (int j = 0; j < var1.Length - 1; j++)
-                            {
-                                task.answer = task.answer + var1[j].Print(ordinaryFraction) + ", ";
-                            }
-                            task.answer = task.answer + var1[var1.Length - 1].Print(ordinaryFraction) + ") B = (";
-                            for (int j = 0; j < var2.Length - 1; j++)
-                            {
-                                task.answer = task.answer + var2[j].Print(ordinaryFraction) + ", ";
-                            }
-                            task.answer = task.answer + var2[var2.Length - 1].Print(ordinaryFraction) + ")";
                         }
                     }
                 }
@@ -213,7 +236,7 @@ namespace MO_02
             for (int i = 0; i < task.sign.Length; i++)
                 new_sign[i] = task.sign[i];
             new_sign[new_sign.Length - 2] = ">=";
-            new_sign[new_sign.Length - 2] = ">=";
+            new_sign[new_sign.Length - 1] = ">=";
             task.sign = new_sign;
         }
         /// <summary>
@@ -239,6 +262,13 @@ namespace MO_02
             new_condition[new_condition.Length - 2] = new OrdinaryFraction[] { temp2, temp1, temp1 };
             new_condition[new_condition.Length - 1] = new OrdinaryFraction[] { temp1, temp2, temp1 };
             new_task.condition = new_condition;
+
+            string[] new_sign = new string[new_task.condition.Length];
+            for(int i = 0; i < new_task.sign.Length; i++)
+                new_sign[i] = "<=";
+            new_sign[new_sign.Length - 2] = ">=";
+            new_sign[new_sign.Length - 1] = ">=";
+            new_task.sign = new_sign;
         }
         /// <summary>
         /// Меняет вид задачи для применения метода Гаусса
@@ -253,7 +283,7 @@ namespace MO_02
                     new_condition[j++] = task.condition[i];
                     task.sign[i] = "<=";
                 }
-            string[] new_sign = new string[task.sign.Length - task.function.Length + 2];
+            string[] new_sign = new string[task.sign.Length  + 2];
             for (int i = 0; i < new_sign.Length - 2; i++)
                 new_sign[i] = task.sign[i];
             new_sign[new_sign.Length - 2] = ">=";
@@ -405,6 +435,18 @@ namespace MO_02
                     }
             }
             return points;
+        }
+        /// <summary>
+        /// Возвращает искомое значение функции
+        /// </summary>
+        /// <returns></returns>
+        public OrdinaryFraction Answer(OrdinaryFraction[] point)
+        {
+            OrdinaryFraction sum = new OrdinaryFraction(0);
+            for (int i = 0; i < point.Length; i++)
+                sum = sum.Addition(point[i].Multiplication(task.function[i]));
+
+            return sum;
         }
     }
 }
